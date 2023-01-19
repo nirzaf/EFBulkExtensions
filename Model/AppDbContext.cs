@@ -13,8 +13,11 @@ namespace EFBulkExtensions.Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Employee>().HasKey(e => e.Id);
-
+            modelBuilder.Entity<Employee>().HasKey(e => e.Id); 
+            //enable temporal table 
+            modelBuilder.Entity<Employee>().ToTable(nameof(Employees), b=>b.IsTemporal());
+            
+            /*
             var employees = new Faker<Employee>()
                 .RuleFor(e => e.Id, f => Guid.NewGuid())
                 .RuleFor(e => e.FullName, f => f.Name.FullName())
@@ -23,8 +26,9 @@ namespace EFBulkExtensions.Model
                 .RuleFor(e => e.Phone, f => f.Phone.PhoneNumber())
                 .RuleFor(e => e.DateOfBirth, f => f.Date.Past(50, DateTime.Now.AddYears(-18)))
                 .RuleFor(e => e.DateOfJoining, f => f.Date.Past(5, DateTime.Now));
-
+            
             modelBuilder.Entity<Employee>().HasData(employees.Generate(5000));
+            */
 
             base.OnModelCreating(modelBuilder);
         }
