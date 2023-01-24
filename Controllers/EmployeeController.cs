@@ -86,64 +86,36 @@ public class EmployeeController : ControllerBase
     public IActionResult GetEmployeeList([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] string sort = "id", [FromQuery] string sortDir = "asc")
     {
         var employees = _context.Employees.AsQueryable();
-
-        // sorting
+        
         if (sortDir == "asc")
         {
-            switch (sort)
+            employees = sort switch
             {
-                case "id":
-                    employees = employees.OrderBy(e => e.Id);
-                    break;
-                case "name":
-                    employees = employees.OrderBy(e => e.FullName);
-                    break;
-                case "email":
-                    employees = employees.OrderBy(e => e.Email);
-                    break;
-                case "address":
-                    employees = employees.OrderBy(e => e.Address);
-                    break;
-                case "phone":
-                    employees = employees.OrderBy(e => e.Phone);
-                    break;
-                case "dob":
-                    employees = employees.OrderBy(e => e.DateOfBirth);
-                    break;
-                case "doj":
-                    employees = employees.OrderBy(e => e.DateOfJoining);
-                    break;
-            }
+                "id" => employees.OrderBy(e => e.Id),
+                "name" => employees.OrderBy(e => e.FullName),
+                "email" => employees.OrderBy(e => e.Email),
+                "address" => employees.OrderBy(e => e.Address),
+                "phone" => employees.OrderBy(e => e.Phone),
+                "dob" => employees.OrderBy(e => e.DateOfBirth),
+                "doj" => employees.OrderBy(e => e.DateOfJoining),
+                _ => employees
+            };
         }
         else
         {
-            switch (sort)
+            employees = sort switch
             {
-                case "id":
-                    employees = employees.OrderByDescending(e => e.Id);
-                    break;
-                case "name":
-                    employees = employees.OrderByDescending(e => e.FullName);
-                    break;
-                case "email":
-                    employees = employees.OrderByDescending(e => e.Email);
-                    break;
-                case "address":
-                    employees = employees.OrderByDescending(e => e.Address);
-                    break;
-                case "phone":
-                    employees = employees.OrderByDescending(e => e.Phone);
-                    break;
-                case "dob":
-                    employees = employees.OrderByDescending(e => e.DateOfBirth);
-                    break;
-                case "doj":
-                    employees = employees.OrderByDescending(e => e.DateOfJoining);
-                    break;
-            }
+                "id" => employees.OrderByDescending(e => e.Id),
+                "name" => employees.OrderByDescending(e => e.FullName),
+                "email" => employees.OrderByDescending(e => e.Email),
+                "address" => employees.OrderByDescending(e => e.Address),
+                "phone" => employees.OrderByDescending(e => e.Phone),
+                "dob" => employees.OrderByDescending(e => e.DateOfBirth),
+                "doj" => employees.OrderByDescending(e => e.DateOfJoining),
+                _ => employees
+            };
         }
-
-        // pagination
+        
         var totalRecords = employees.Count();
         var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
         var data = employees.Skip((page - 1) * pageSize).Take(pageSize).ToList();
